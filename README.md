@@ -1,70 +1,95 @@
-# Getting Started with Create React App
+# AI Destekli Görev Takip Uygulaması
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Bu proje, React ve Firebase kullanılarak geliştirilmiş bir görev planlama uygulamasıdır. Kullanıcılar görevlerini ekleyebilir, teslim tarihlerini belirtebilir ve takvim üzerinden takip edebilir. İleride yapay zeka desteğiyle görevlerin haftalık/günlük planları otomatik üretilecektir.
 
-## Available Scripts
+## Başlamak için Gerekenler
 
-In the project directory, you can run:
+### 1. Bu repoyu klonlayın:
 
-### `npm start`
+```bash
+git clone https://github.com/kullanici-adi/ai-todo-list.git
+cd ai-todo-list
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 2. Gerekli bağımlılıkları yükleyin:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+```
 
-### `npm test`
+Bu komut, `package.json` dosyasında listelenmiş olan tüm kütüphaneleri yükler (örneğin `firebase`, `react-router-dom`, `react-calendar`, `tailwindcss` vb.).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Firebase Kurulumu
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+> Herkesin kendi Firebase projesini oluşturması ve bilgilerini `firebase.js` dosyasına girmesi gerekmektedir.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Adımlar:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. [Firebase Console](https://console.firebase.google.com/) adresine gidin.
+2. “Yeni Proje Oluştur”a tıklayın ve projeyi oluşturun.
+3. Sol menüden ⚙️ Ayarlar > Proje Ayarları kısmına gidin.
+4. "Your apps" bölümünden `</>` (Web App) seçeneğiyle bir uygulama oluşturun.
+5. Oluşturduktan sonra aşağıdaki gibi bir `firebaseConfig` objesi karşınıza çıkacak:
 
-### `npm run eject`
+```js
+// src/firebase.js
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+const firebaseConfig = {
+  apiKey: "SİZİN-API-KEY",
+  authDomain: "SİZİN-PROJENİZ.firebaseapp.com",
+  projectId: "SİZİN-PROJE-ID",
+  storageBucket: "SİZİN-PROJENİZ.appspot.com",
+  messagingSenderId: "SENDER-ID",
+  appId: "APP-ID"
+};
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+export { db, auth };
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+> `firebase.js` dosyasını `src` klasörü içine yerleştirin.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+##  Projeyi Çalıştırmak
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Aşağıdaki komutla projeyi çalıştırabilirsiniz:
 
-### Code Splitting
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Tarayıcınızda `http://localhost:3000` adresine giderek uygulamayı görebilirsiniz.
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+##  Kullanılan Teknolojiler
 
-### Making a Progressive Web App
+* React
+* Firebase (Auth + Firestore)
+* Tailwind CSS
+* React Router
+* React Calendar
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+##  Özellikler
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* ✅ Kayıt Ol / Giriş Yap
+* ✅ Görev Ekle / Güncelle / Sil
+* ✅ Teslim Tarihi Seçimi
+* ✅ Takvim Görünümü
+* ✅ Görev Günleri İşaretleme
+* ✅ Teslim Tarihi Yaklaşanlar için Son 3 Gün Kala Uyarı
+*  AI Destekli Haftalık/Günlük Planlama ve Bu Planlamanın Takvim Kısmına Yansıtılması (eklenecek)
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
