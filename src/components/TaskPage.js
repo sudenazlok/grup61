@@ -25,7 +25,7 @@ function TaskPage() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      window.location.href = "/";
+      navigate("/login");
     } catch (error) {
       console.error("Çıkış yapılamadı:", error);
     }
@@ -65,12 +65,20 @@ function TaskPage() {
         deadline,
         userId: currentUser.uid,
         createdAt: new Date(),
+        completed: false // Yeni görevler tamamlanmamış başlar
       });
     }
 
     setTask("");
     setDeadline("");
     fetchTasks(currentUser.uid);
+  };
+
+  // Görev tamamla/aktif yap
+  const handleToggleComplete = async (id, current) => {
+    const taskRef = doc(db, "tasks", id);
+    await updateDoc(taskRef, { completed: !current });
+    if (currentUser) fetchTasks(currentUser.uid);
   };
 
   const handleDeleteTask = async (id) => {
@@ -88,20 +96,34 @@ return (
   <div className="min-h-screen bg-gradient-to-br from-purple-100 via-gray-100 to-teal-100">
     <div className="max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl">
       
-      {/* Sağ üst köşede alt alta 2 buton */}
-      <div className="flex flex-col items-end gap-2 mb-4">
+      {/* Üst kısımda butonlar */}
+      <div className="flex justify-between items-start mb-4">
         <button
-          onClick={handleLogout}
-          className="bg-red-400 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition"
+          onClick={() => navigate("/")}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
         >
-          Çıkış Yap
+          Anasayfaya Dön
         </button>
-        <button
-          onClick={() => navigate("/calendar")}
-          className="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition"
-        >
-          📅 Takvimi Gör
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          <button
+            onClick={() => navigate("/profile")}
+            className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition"
+          >
+            Profilim
+          </button>
+          <button
+            onClick={handleLogout}
+            className="bg-red-400 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition"
+          >
+            Çıkış Yap
+          </button>
+          <button
+            onClick={() => navigate("/calendar")}
+            className="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition"
+          >
+            📅 Takvimi Gör
+          </button>
+        </div>
       </div>
 
       {/* Başlık */}
@@ -140,26 +162,50 @@ return (
         {tasks.map((t) => (
           <div
             key={t.id}
-            className="bg-white/80 border border-gray-200 rounded-xl p-4 shadow hover:shadow-lg transition"
+            className={`bg-white/80 border border-gray-200 rounded-xl p-4 shadow hover:shadow-lg transition ${t.completed ? 'opacity-60 line-through' : ''}`}
           >
-            <h3
-              onClick={() => navigate(`/task/${t.id}`, { state: { task: t } })}
-              className="text-xl font-semibold text-teal-700 cursor-pointer hover:underline"
-            >
-              {t.text}
-            </h3>
-            <p className="text-sm text-gray-600">
-              📅 Teslim Tarihi:{" "}
-              <span className="text-black font-medium">{t.deadline}</span>
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              🤖 AI planı: Tıklayınca detaylı yapay zeka önerisi!
-            </p>
-
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3
+                  onClick={() => navigate(`/task/${t.id}`, { state: { task: t } })}
+                  className={`text-xl font-semibold text-teal-700 cursor-pointer hover:underline ${t.completed ? 'line-through' : ''}`}
+                >
+                  {t.text}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  📅 Teslim Tarihi: {" "}
+                  <span className="text-black font-medium">{t.deadline}</span>
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  🤖 AI planı: Tıklayınca detaylı yapay zeka önerisi!
+                </p>
+              </div>
+              <div className="flex items-center ml-2 group relative">
+                <input
+                  type="checkbox"
+                  checked={t.completed}
+                  onChange={() => handleToggleComplete(t.id, t.completed)}
+                  className="w-6 h-6 accent-green-500 cursor-pointer appearance-none border-2 border-gray-400 rounded group-hover:bg-green-100 group-hover:border-green-500 transition-all duration-150 flex items-center justify-center"
+                  style={{ position: 'relative', zIndex: 1 }}
+                />
+                {/* Tik işareti sadece hover'da veya checked ise görünsün */}
+                <svg
+                  className={`absolute pointer-events-none w-5 h-5 text-green-600 left-0 top-0 m-0.5 transition-opacity duration-150 ${t.completed ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={{zIndex: 2}}
+                >
+                  <polyline points="5 11 9 15 15 7" />
+                </svg>
+              </div>
+            </div>
             <div className="flex gap-2 mt-3">
               <button
                 onClick={() => handleEditTask(t)}
                 className="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-500"
+                disabled={t.completed}
               >
                 ✏️ Güncelle
               </button>

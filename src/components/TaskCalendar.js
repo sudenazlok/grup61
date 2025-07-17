@@ -92,8 +92,13 @@ const TaskCalendar = () => {
                 tileContent={({ date, view }) => {
                   if (view === "month") {
                     const dateStr = date.toLocaleDateString("en-CA");
-                    const hasTask = tasks.some(task => task.deadline === dateStr);
-                    return hasTask ? <div className="text-center text-red-500">●</div> : null;
+                    const dayTasks = tasks.filter(task => task.deadline === dateStr);
+                    if (dayTasks.length === 0) return null;
+                    // Eğer o günün tüm görevleri tamamlanmışsa yeşil, değilse kırmızı göster
+                    const allCompleted = dayTasks.length > 0 && dayTasks.every(task => task.completed);
+                    return (
+                      <div className={`text-center ${allCompleted ? 'text-green-500' : 'text-red-500'}`}>●</div>
+                    );
                   }
                 }}
               />
@@ -109,7 +114,13 @@ const TaskCalendar = () => {
               ) : (
                 <ul className="list-disc list-inside">
                   {filteredTasks.map((task, index) => (
-                    <li key={index}>{task.text?.trim()}</li>
+                    <li
+                      key={index}
+                      className="cursor-pointer text-blue-700 hover:underline hover:text-blue-900 transition"
+                      onClick={() => navigate(`/task/${task.id}`, { state: { task } })}
+                    >
+                      {task.text?.trim()}
+                    </li>
                   ))}
                 </ul>
               )}
