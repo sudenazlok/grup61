@@ -131,6 +131,9 @@ Ekip, Sprint 1’in planlama ve koordinasyon açısından verimli geçtiğini de
 •⁠ Sprint Hedefi
 Sprint 2’nin temel hedefi, projenin genel kısımlarını ana hatlarıyla oluşturmak ve kullanılabilirliği test etmek.
 
+•⁠ Sprint Notları
+Kullanıcı kimlik doğrulama giriş yapma kayıt olma eklendi. Firebase Auth ile kullanıcıların e-posta ve şifreyle kayıt olma ve giriş yapma sistemi kuruldu. Giriş yapan kullanıcıya özel içerikler gösterilecek şekilde yapılandırıldı.Görev ekleme silme güncelleme ve listeleme özelliği tamamlandı. Kullanıcılar görev başlığı ve teslim tarihi girerek görev ekleyebiliyor, mevcut görevleri silebiliyor veya güncelleyebiliyor. Tüm veriler Firestore üzerinde kullanıcıya özel saklanıyor.Görev detay sayfası oluşturuldu. Her göreve tıklandığında, kullanıcı AI tarafından önerilecek günlük, haftalık ve aylık planların yer alacağı ayrı bir detay sayfasına yönlendiriliyor. Tailwind css ile ui tasarımı geliştirilerek görsel bir kullanıcı arayüzü oluşturuldu. Giriş sayfasına şifremi unuttum kısmı eklendi. Buraya geçerli mail adresi girince e posta gönderiyor ve şifreni değiştirebiliyorsun ,  takvim sayfası eklendi kullanıcı takvime bakarak görevler görülebiliyor. Göreve son 3 gün kaldıysa uyarı çıkıyor. Proje açıklaması kısmı ile görevini detaylı şekilde anlatılacak şekilde düzenlendi. Ana sayfa oluşturuldu. Profilim sayfası oluşturuldu.
+
 •⁠ Sprint içinde tamamlanması tahmin edilen puan: 100
 
 •⁠ Toplam proje 300 puana bölünerek 3 sprint oluşturulmuştur. Sprint 1, planlama odaklı olup 100 puanlık görev seçilmiştir. Bu sprintte geliştirme başlamış, projenin altyapısı oluşturulmuş genel hatları tamamlanmıştır.
