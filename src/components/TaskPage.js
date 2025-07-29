@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { getTaskAdvice } from "../geminiService";
 
 function TaskPage() {
   const [task, setTask] = useState("");
@@ -19,6 +20,8 @@ function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [editId, setEditId] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [aiAdvice, setAiAdvice] = useState("");
+  const [isLoadingAdvice, setIsLoadingAdvice] = useState(false);
   const navigate = useNavigate();
   const tasksCollection = collection(db, "tasks");
 
@@ -92,6 +95,26 @@ function TaskPage() {
     setEditId(task.id);
   };
 
+  // AI önerisi alma fonksiyonu
+  const handleGetAIAdvice = async (taskTitle) => {
+    if (!taskTitle.trim()) {
+      setAiAdvice("Lütfen önce bir görev başlığı girin.");
+      return;
+    }
+
+    setIsLoadingAdvice(true);
+    setAiAdvice("");
+    
+    try {
+      const advice = await getTaskAdvice(taskTitle);
+      setAiAdvice(advice);
+    } catch (error) {
+      setAiAdvice("AI önerisi alınırken bir hata oluştu. Lütfen tekrar deneyin.");
+    } finally {
+      setIsLoadingAdvice(false);
+    }
+  };
+
 return (
   <div className="min-h-screen bg-gradient-to-br from-purple-100 via-gray-100 to-teal-100">
     <div className="max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl">
@@ -155,6 +178,39 @@ return (
         >
           {editId ? "🛠 Güncelle" : "+ Ekle"}
         </button>
+      </div>
+
+      {/* AI Önerisi Bölümü */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+        <h3 className="text-lg font-semibold text-blue-800 mb-3">🤖 AI Görev Asistanı</h3>
+        <div className="flex flex-col sm:flex-row gap-3 mb-3">
+          <input
+            type="text"
+            placeholder="Görev başlığını yazın ve AI önerisi alın..."
+            className="flex-1 p-3 border border-blue-300 rounded-lg"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleGetAIAdvice(e.target.value);
+              }
+            }}
+          />
+          <button
+            onClick={() => handleGetAIAdvice(task || document.querySelector('input[placeholder*="Görev başlığını"]').value)}
+            disabled={isLoadingAdvice}
+            className="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {isLoadingAdvice ? "🤔 Düşünüyor..." : "💡 AI Önerisi Al"}
+          </button>
+        </div>
+        
+        {aiAdvice && (
+          <div className="bg-white p-4 rounded-lg border border-blue-300">
+            <h4 className="font-semibold text-blue-800 mb-2">✨ AI Önerileri:</h4>
+            <div className="text-gray-700 whitespace-pre-line">
+              {aiAdvice}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Görev Listesi */}
