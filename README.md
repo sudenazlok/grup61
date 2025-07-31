@@ -1,206 +1,95 @@
-# grup61
-grup61 yapay zeka 
-TAKIM İSMİ: GRUP61
+# AI Destekli Görev Takip Uygulaması
 
-•⁠ Takım Üyeleri
+Bu proje, React ve Firebase kullanılarak geliştirilmiş bir görev planlama uygulamasıdır. Kullanıcılar görevlerini ekleyebilir, teslim tarihlerini belirtebilir ve takvim üzerinden takip edebilir. İleride yapay zeka desteğiyle görevlerin haftalık/günlük planları otomatik üretilecektir.
 
-İsim -	Rol -	LinkedIn
-İrem Nil Çiçek - Product Owner - LinkedIn
-Sudenaz Lök	- Scrum Master	- LinkedIn
-Cahit Yunus Özdikiş	- Developer	- LinkedIn
-Ayça Engin -	Developer -	LinkedIn
-Berkay Doğan - Developer -	LinkedIn
+## Başlamak için Gerekenler
 
-•⁠ Takım Logosu
+### 1. Bu repoyu klonlayın:
 
+```bash
+git clone https://github.com/kullanici-adi/ai-todo-list.git
+cd ai-todo-list
+```
 
+### 2. Gerekli bağımlılıkları yükleyin:
 
+```bash
+npm install
+```
 
+Bu komut, `package.json` dosyasında listelenmiş olan tüm kütüphaneleri yükler (örneğin `firebase`, `react-router-dom`, `react-calendar`, `tailwindcss` vb.).
 
+---
 
+## Firebase Kurulumu
 
+> Herkesin kendi Firebase projesini oluşturması ve bilgilerini `firebase.js` dosyasına girmesi gerekmektedir.
 
-•⁠ ÜRÜN İSMİ: TickAI
+### Adımlar:
 
+1. [Firebase Console](https://console.firebase.google.com/) adresine gidin.
+2. “Yeni Proje Oluştur”a tıklayın ve projeyi oluşturun.
+3. Sol menüden ⚙️ Ayarlar > Proje Ayarları kısmına gidin.
+4. "Your apps" bölümünden `</>` (Web App) seçeneğiyle bir uygulama oluşturun.
+5. Oluşturduktan sonra aşağıdaki gibi bir `firebaseConfig` objesi karşınıza çıkacak:
 
-•⁠ ÜRÜN AÇIKLAMASI
-TickAI, kullanıcının günlük, haftalık ve aylık görevlerini yönetmesini sağlayan, yapay zekâ destekli akıllı bir görev planlama uygulamasıdır. Uygulama; kullanıcı alışkanlıklarını analiz eder, ilerleme durumunu izler, gelişim raporları sunar ve yavaşlamaları tespit ederek zamanında müdahale eder. Ayrıca görevlerin tamamlanma süresine göre tahminleme yapar ve dinamik bir takvim önerisi sunar.
+```js
+// src/firebase.js
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
+const firebaseConfig = {
+  apiKey: "SİZİN-API-KEY",
+  authDomain: "SİZİN-PROJENİZ.firebaseapp.com",
+  projectId: "SİZİN-PROJE-ID",
+  storageBucket: "SİZİN-PROJENİZ.appspot.com",
+  messagingSenderId: "SENDER-ID",
+  appId: "APP-ID"
+};
 
-•⁠ ÜRÜN ÖZELLİKLERİ
-- ⁠Görev ekleme/silme/güncelleme
-- ⁠Günlük/haftalık/aylık etiketleme
--⁠ ⁠Yapay zekâ destekli ilerleme analizi
-- ⁠Otomatik takvim önerisi
--⁠ ⁠Uyarı ve yeniden planlama sistemi
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
+export { db, auth };
+```
 
-•⁠ HEDEF KİTLE
--⁠ ⁠Günlük plan yapmayı seven bireyler
-- Yaptığı planlara uyamadığında panikleyen ve tekrardan planlama için vakti olmayan kullanıcılar
-- ⁠Öğrenciler ve profesyoneller
-- ⁠Verimlilik odaklı kullanıcılar
--⁠ ⁠16 yaş ve üzeri herkes
+> `firebase.js` dosyasını `src` klasörü içine yerleştirin.
 
+---
 
-•⁠PAZARLAMA PLANI:
-Uygulama, ücretsiz temel sürümüyle piyasaya sunulacak. Pro kullanıcılar için AI destekli öneriler ve istatistiksel raporlar içeren bir abonelik sistemi planlanmaktadır. Ek olarak:
--⁠ ⁠Ürün tanıtımları için sosyal medya kampanyaları yapılacak.
-- ⁠Verimlilik meraklılarına yönelik blog iş birlikleri kurulacak.
-- ⁠App Store / Google Play üzerinden yayınlanacak.
+##  Projeyi Çalıştırmak
 
+Aşağıdaki komutla projeyi çalıştırabilirsiniz:
 
-•⁠ SPRİNT 1: PLANLAMA VE TEMEL HAZIRLIK 
+```bash
+npm start
+```
 
+Tarayıcınızda `http://localhost:3000` adresine giderek uygulamayı görebilirsiniz.
 
-•⁠ Sprint Hedefi
-Sprint 1’in temel hedefi, projenin yapısını belirlemek, görevleri kullanıcı hikayeleri (user story) haline getirmek ve teknik geliştirme süreci başlamadan önce zemin hazırlamaktır.
+---
 
+##  Kullanılan Teknolojiler
 
-•⁠ Sprint içinde tamamlanması tahmin edilen puan: 100
+* React
+* Firebase (Auth + Firestore)
+* Tailwind CSS
+* React Router
+* React Calendar
 
+---
 
-•⁠ Toplam proje 300 puana bölünerek 3 sprint oluşturulmuştur. Sprint 1, planlama odaklı olup 100 puanlık görev seçilmiştir. Bu sprintte geliştirme başlamamış; ancak proje altyapısı, görevler ve iş takibi için ön hazırlıklar yapılmıştır.
+##  Özellikler
 
+* ✅ Kayıt Ol / Giriş Yap
+* ✅ Görev Ekle / Güncelle / Sil
+* ✅ Teslim Tarihi Seçimi
+* ✅ Takvim Görünümü
+* ✅ Görev Günleri İşaretleme
+* ✅ Teslim Tarihi Yaklaşanlar için Son 3 Gün Kala Uyarı
+*  AI Destekli Haftalık/Günlük Planlama ve Bu Planlamanın Takvim Kısmına Yansıtılması (eklenecek)
 
-•⁠ Backlog düzeni ve Story seçimleri: Backlog'umuz bir sonraki sprintlerin temelini atacak şekilde düzenlenmiştir. Sprint başına tahmin edilen puan sayısını geçmeyecek şekilde görevler dağıtılmıştır.
-
-
-•⁠ User Story 
-Kullanıcı kayıt/giriş işlevselliği planlama	20	Google Auth kullanılacak, Firebase üzerinden
-Görev sistemi mimarisi oluşturma	25	Görevler nasıl saklanacak, CRUD akışı
-Görev etiketleme kategorilerinin belirlenmesi	15	Günlük/haftalık/aylık sınıflandırma yapısı
-Firebase veritabanı şeması planlama	20	Realtime mı Firestore mu? Hangi veri nasıl?
-İlk wireframe ve UI bileşenleri çizimi	20	Basit ekran taslakları (login, home, görev listesi)
-
-
-•⁠ Product Backlog & Miro Linki
-Miro üzerinden ürün backlog’u oluşturulmaya başlandı, ayrıldı. User story'ler aşağıdaki renk kodlarıyla ayrılacak.
-⁠🔵 Yazılım
-🟣 Tasarım
-⁠🟢 Veri tabanı / destek görevleri
-https://miro.com/app/board/uXjVIg5TCGA=/?share_link_id=927571156801
-
-
-• Daily Scrum
-Geliştirme süreci başlamadığı için bu sprintte resmi Daily Scrum toplantıları yapılmamıştır. Ancak ekip üyeleri arasında görev dağılımı ve planlamaya yönelik Google Meet ve WhatsApp üzerinden günlük iletişim kurulmuştur.
--Sprint 2 ile birlikte her gün saat 20.00’da düzenli Daily yapılması planlanmaktadır.
-
-
-• Sprint Board
-Sprint board henüz geliştirme içermediğinden dolayı sadece planlama aşamasındaki görevler yer almaktadır.
-
-
-• Ürün Durumu / Ekran Görüntüleri
-Sprint 1 boyunca arayüz kodlaması yapılmamıştır. Ancak arayüzün temel bileşenleri Figma üzerinden çizilmeye başlanacak. (Login ekranı, görev listesi, görev detayı gibi)
-
-<img width="426" height="201" alt="Ekran Resmi 2025-07-11 12 20 49" src="https://github.com/user-attachments/assets/205348fc-b330-4503-8ba2-5d16c272245d" />
-
-<img width="1234" height="625" alt="Ekran Resmi 2025-07-11 12 19 56" src="https://github.com/user-attachments/assets/4242b69d-968f-4562-9444-7940b1c56eed" />
-
-
-• SPRİNT NOTLARI
-Tüm ekip Sprint 1 hedeflerini gözden geçirmiştir. Projenin genel yapısı ve teknik gereksinimleri değerlendirilmiştir. İlerlenecek yol belirlenmiş, kullanılacak teknolojilere karar verilmiştir. 
-
-• KULLANILAN TEKNOLOJİLER
-- ⁠React.js – Kullanıcı arayüzü
-- ⁠Firebase – Kimlik doğrulama ve veritabanı
--⁠ ⁠GitHub – Versiyon kontrol
--⁠ ⁠Vercel – Deploy ve canlı sunum
--⁠ ⁠JavaScript – Kodlama dili
-
-
-• Sprint sonunda:
-- ⁠OpenAI veya Gemini API ile ilk AI bağlantısı kurulacak.
--⁠ ⁠Görev tamamlama süreleri analiz edilecek.
-- ⁠AI’a gönderilecek prompt yapısı oluşturulacak ve test edilecek.
--⁠ Backend tarafında AI isteklerini yöneten endpointler FastAPI ile hazırlanacak.
-- ⁠Kullanıcıya öneri mesajları gösterilecek arayüz bileşeni (feedback kartı) geliştirilecek.
-
-• Sprint Retrospective
-Ekip, Sprint 1’in planlama ve koordinasyon açısından verimli geçtiğini değerlendirdi. Henüz yazılıma geçilmediği için teknik darboğaz yaşanmadı.
-
-• Sprint 2 için alınan kararlar:
-- ⁠Geliştirme ortamı (repo, Vercel bağlantısı) hazır hale getirilecek.
-- ⁠Tasarım dosyaları ve veritabanı şeması netleştirilecek.
--⁠ ⁠Geliştirmeye başlanacak ilk modül: Kullanıcı Giriş Sistemi
-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-•⁠ SPRİNT 2: PROJEYE BAŞLAMA VE İLERLEME 
-
-•⁠ Sprint Hedefi
-Sprint 2’nin temel hedefi, projenin genel kısımlarını ana hatlarıyla oluşturmak ve kullanılabilirliği test etmek.
-
-•⁠ Sprint Notları
-Kullanıcı kimlik doğrulama giriş yapma kayıt olma eklendi. Firebase Auth ile kullanıcıların e-posta ve şifreyle kayıt olma ve giriş yapma sistemi kuruldu. Giriş yapan kullanıcıya özel içerikler gösterilecek şekilde yapılandırıldı.Görev ekleme silme güncelleme ve listeleme özelliği tamamlandı. Kullanıcılar görev başlığı ve teslim tarihi girerek görev ekleyebiliyor, mevcut görevleri silebiliyor veya güncelleyebiliyor. Tüm veriler Firestore üzerinde kullanıcıya özel saklanıyor.Görev detay sayfası oluşturuldu. Her göreve tıklandığında, kullanıcı AI tarafından önerilecek günlük, haftalık ve aylık planların yer alacağı ayrı bir detay sayfasına yönlendiriliyor. Tailwind css ile ui tasarımı geliştirilerek görsel bir kullanıcı arayüzü oluşturuldu. Giriş sayfasına şifremi unuttum kısmı eklendi. Buraya geçerli mail adresi girince e posta gönderiyor ve şifreni değiştirebiliyorsun ,  takvim sayfası eklendi kullanıcı takvime bakarak görevler görülebiliyor. Göreve son 3 gün kaldıysa uyarı çıkıyor. Proje açıklaması kısmı ile görevini detaylı şekilde anlatılacak şekilde düzenlendi. Ana sayfa oluşturuldu. Profilim sayfası oluşturuldu.
-
-•⁠ Sprint içinde tamamlanması tahmin edilen puan: 100
-
-•⁠ Toplam proje 300 puana bölünerek 3 sprint oluşturulmuştur. Sprint 1, planlama odaklı olup 100 puanlık görev seçilmiştir. Bu sprintte geliştirme başlamış, projenin altyapısı oluşturulmuş genel hatları tamamlanmıştır.
-
-•⁠ Backlog düzeni ve Story seçimleri: Backlog'umuz kullanıcının ihtiyacı olan planlamayı yapabileceği kullanımı kolay ve ilgi çekici şekilde tasarlanmıştır. Sprint başında tahmin edilen puan nezlinde düzenlemeler ve görev dağılımları yapılmıştır. 
-⁠🔵 Yazılım
-🟣 Tasarım
-⁠🟢 Veri tabanı / destek görevleri
-
-<img width="402" height="507" alt="Ekran Resmi 2025-07-19 13 10 25" src="https://github.com/user-attachments/assets/2043dbec-0b38-4568-b4bc-3bf3a8bf0335" />
-
-•⁠ Daily Scrum: Daily Scrum toplantılarının Google Meet üzerinden yapılmaya devam edilmiştir. Daily Scrum toplantılarımız ve günlük Whatsapp konuşmalarımız aşağıya eklenmiştir.
-
-<img width="1017" height="679" alt="Ekran Resmi 2025-07-19 13 16 45" src="https://github.com/user-attachments/assets/52b036fe-23fe-4275-94a9-af4144855f3e" />
-<img width="1057" height="460" alt="Ekran Resmi 2025-07-19 13 17 28" src="https://github.com/user-attachments/assets/298c8aa3-a749-40a1-9cc2-446cfc2ed222" />
-
-• Sprint Board
-⁠🔵 Yazılım
-🟣 Tasarım
-⁠🟢 Veri tabanı / destek görevleri
-
-<img width="882" height="412" alt="Ekran Resmi 2025-07-19 13 58 24" src="https://github.com/user-attachments/assets/f038001f-22a5-471c-9239-0964e594866f" />
-
-- ÜRÜNÜN DURUMU: EKRAN GÖRÜNTÜLERİ
-
-<img width="2556" height="1394" alt="Ekran görüntüsü 2025-07-13 172256" src="https://github.com/user-attachments/assets/28b80980-7c46-4a42-8aef-ec4a4b76b255" />
-
-<img width="2559" height="1393" alt="Ekran görüntüsü 2025-07-13 171913" src="https://github.com/user-attachments/assets/5222a013-f664-45d4-8321-0ed93debb34e" />
-
-
-
-• Sprint Review:
-
- Sprint içerisinde tasarlanmış olangörevlerleveller tüm ekip tarafından tamamlandı, herhangi bir sorun ile karşılaşılmadı, geliştirilebilecek noktalar tartışıldı.
- 
-Sprint Review katılımcıları: İrem Nil Çiçek, Sudenaz Lök, Cahit Yunus Özdikiş, Ayça Engin, Berkay Doğan 
-
-• Sprint Retrospective:
-Ekip, aynı şekilde görevlendirmelerle devam edecek. Kişiler kendi görevlerini tamamlayacak.
-Ai entegrasyonu ve backend kısmının tamamlanmasına karar verildi.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+---
 
