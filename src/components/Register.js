@@ -10,11 +10,32 @@ function Register() {
   const navigate = useNavigate();
 
   const handleRegister = async () => {
+    if (!email || !password) {
+      setError("Lütfen e-posta ve şifre girin.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Şifre en az 6 karakter olmalı.");
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       navigate("/tasks");
     } catch (err) {
-      setError("Kayıt başarısız! Lütfen bilgileri kontrol et.");
+      console.error("Kayıt hatası:", err.message);
+
+      // Firebase hata mesajlarına göre kullanıcı dostu mesaj ver
+      if (err.code === "auth/email-already-in-use") {
+        setError("Bu e-posta adresi zaten kullanılıyor.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Geçersiz e-posta adresi.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Şifre çok zayıf. En az 6 karakter olmalı.");
+      } else {
+        setError("Kayıt başarısız: " + err.message);
+      }
     }
   };
 
@@ -36,7 +57,7 @@ function Register() {
 
       <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-md border border-green-100">
         <h2 className="text-2xl font-semibold text-center text-green-600 mb-6">
-          Hesap Oluştur 🌱
+          Hesap Oluştur 
         </h2>
         <p className="text-center text-gray-500 mb-6">
           Hedeflerine ulaşmak artık daha kolay!

@@ -34,16 +34,18 @@ function TaskPage() {
     }
   };
 
-  const fetchTasks = async (uid) => {
-    const q = query(tasksCollection, where("userId", "==", uid));
-    const snapshot = await getDocs(q);
-    const fetchedTasks = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setTasks(fetchedTasks);
-  };
+ const fetchTasks = async (uid) => {
+  const q = query(tasksCollection, where("userId", "==", uid));
+  const snapshot = await getDocs(q);
+  const fetchedTasks = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 
+  
+  const normalTasks = fetchedTasks.filter(task => task.isAi !== true);
+  setTasks(normalTasks);
+};
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -84,10 +86,16 @@ function TaskPage() {
     if (currentUser) fetchTasks(currentUser.uid);
   };
 
-  const handleDeleteTask = async (id) => {
+const handleDeleteTask = async (id) => {
+  try {
+     console.log("Silinecek görev id:", id);
     await deleteDoc(doc(db, "tasks", id));
     if (currentUser) fetchTasks(currentUser.uid);
-  };
+  } catch (err) {
+    console.error("Silme hatası:", err);
+    alert("Görev silinemedi! Yetki veya bağlantı problemi olabilir.");
+  }
+};
 
   const handleEditTask = (task) => {
     setTask(task.text);
@@ -142,7 +150,7 @@ return (
           </button>
           <button
             onClick={() => navigate("/calendar")}
-            className="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
             📅 Takvimi Gör
           </button>
@@ -163,7 +171,7 @@ return (
           type="text"
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          placeholder="🎯 Ne yapacaksın?"
+          placeholder=" Ne yapacaksın?"
           className="flex-1 p-3 border border-gray-300 rounded-lg"
         />
         <input
@@ -174,7 +182,7 @@ return (
         />
         <button
           onClick={handleAddTask}
-          className="bg-teal-700 text-white px-5 py-3 rounded-lg hover:bg-green-600 transition"
+          className="bg-teal-700 text-white px-5 py-3 rounded-lg hover:bg-teal-600 transition"
         >
           {editId ? "🛠 Güncelle" : "+ Ekle"}
         </button>
@@ -197,9 +205,9 @@ return (
           <button
             onClick={() => handleGetAIAdvice(task || document.querySelector('input[placeholder*="Görev başlığını"]').value)}
             disabled={isLoadingAdvice}
-            className="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
-            {isLoadingAdvice ? "🤔 Düşünüyor..." : "💡 AI Önerisi Al"}
+            {isLoadingAdvice ? " Düşünüyor..." : "💡 AI Önerisi Al"}
           </button>
         </div>
         
@@ -223,7 +231,8 @@ return (
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h3
-                  onClick={() => navigate(`/task/${t.id}`, { state: { task: t } })}
+                  onClick={() => navigate(`/task/${t.id}`, { state: { task: { ...t, isAi: true } } })}
+
                   className={`text-xl font-semibold text-teal-700 cursor-pointer hover:underline ${t.completed ? 'line-through' : ''}`}
                 >
                   {t.text}
@@ -233,7 +242,7 @@ return (
                   <span className="text-black font-medium">{t.deadline}</span>
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
-                  🤖 AI planı: Tıklayınca detaylı yapay zeka önerisi!
+                  AI planı: Tıklayınca detaylı yapay zeka önerisi!
                 </p>
               </div>
               <div className="flex items-center ml-2 group relative">

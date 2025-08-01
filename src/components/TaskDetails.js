@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { generateStructuredPlan } from "../geminiService";
+import { addDoc, collection } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { onSnapshot } from "firebase/firestore";
+import { getDocs, query, where } from "firebase/firestore";
+
+
 
 function TaskDetails() {
   const location = useLocation();
@@ -9,8 +16,73 @@ function TaskDetails() {
   const [description, setDescription] = useState("");
   const [availableDays, setAvailableDays] = useState([]);
   const [dailyHours, setDailyHours] = useState("");
-  const [aiPlan, setAiPlan] = useState(null);
+  const [aiPlan, setAiPlan] = useState([]);
   const [showPlan, setShowPlan] = useState(false);
+
+useEffect(() => {
+
+   console.log("TaskDetails useEffect çalıştı");
+
+  if (!task?.isAi) {
+    console.log("task undefined veya isAi değil, return ile çıkıldı!");
+    return;
+  }
+
+
+  const fetchAiPlan = async () => {
+    // Firestore’dan oku
+      const q = query(
+        collection(db, "tasks"),
+        where("userId", "==", auth.currentUser?.uid),
+        where("isAi", "==", true),
+        where("taskTitle", "==", task.text), 
+        where("completed", "==", false)
+      );
+    console.log("task.text", task.text);
+ 
+
+
+    const snapshot = await getDocs(q);
+  
+    const plan = snapshot.docs.map(doc => ({
+      date: doc.data().deadline, // veya .date
+      task: doc.data().text      // veya .task
+    }));
+    console.log("Firestore'dan gelen plan:", plan);
+
+    if (plan.length > 0) {
+      setAiPlan(plan);
+      setShowPlan(true);
+    } else {
+      // Firestore’da yoksa, localStorage’a bak
+      const key = `aiPlan-${task.text}-${task.deadline}`;
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed.aiPlan)) {
+            setAiPlan(parsed.aiPlan);
+            setShowPlan(true);
+            return;
+          }
+        } catch (err) {
+          console.error("LocalStorage plan verisi bozuk:", err);
+        }
+      }
+      
+
+      setAiPlan([]);
+      setShowPlan(false);
+      
+
+    }
+  };
+
+  fetchAiPlan();
+}, [task]);
+
+
+
 
   if (!task) {
     return (
@@ -29,6 +101,7 @@ function TaskDetails() {
   }
 
   const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
   const deadlineDate = new Date(task.deadline);
   const diffInTime = deadlineDate.getTime() - today.getTime();
   const deadlineDiff = Math.ceil(diffInTime / (1000 * 3600 * 24));
@@ -41,50 +114,84 @@ function TaskDetails() {
     );
   };
 
-  // Basit AI plan algoritması
-  const generatePlan = () => {
-    if (!description || !dailyHours || availableDays.length === 0) return;
-    const plan = [];
-    const start = new Date();
-    const end = new Date(task.deadline);
-    let current = new Date(start);
-    let totalDays = 0;
-    let planDays = [];
-    // Haftanın günleri eşlemesi
-    const dayMap = {
-      'Pzt': 1,
-      'Sal': 2,
-      'Çar': 3,
-      'Per': 4,
-      'Cum': 5,
-      'Cmt': 6,
-      'Paz': 0
-    };
-    // Tüm günler arasında, seçili günlerde olanları bul
-    while (current <= end) {
-      if (availableDays.includes(Object.keys(dayMap).find(key => dayMap[key] === current.getDay()))) {
-        planDays.push(new Date(current));
-        totalDays++;
-      }
-      current.setDate(current.getDate() + 1);
-    }
-    // Her güne eşit iş dağıtımı
-    const totalHours = totalDays * Number(dailyHours);
-    planDays.forEach((date, idx) => {
-      plan.push({
-        date: date.toLocaleDateString('tr-TR'),
-        hours: dailyHours,
-        note: idx === 0 ? 'Başlangıç!' : idx === planDays.length - 1 ? 'Teslim öncesi son gün!' : ''
-      });
-    });
-    setAiPlan({
-      description,
-      totalDays,
-      totalHours,
-      plan
-    });
-    setShowPlan(true);
+
+const generateAiPlan = async () => {
+  if (!description || !dailyHours || availableDays.length === 0) return;
+
+  const planData = {
+    description,
+    deadline: task.deadline,
+    dailyHours,
+    availableDays,
+    startDate: todayStr
   };
+
+  const result = await generateStructuredPlan(planData);
+  console.log("AI'dan gelen yanıt:", result);
+  if (!result || !Array.isArray(result)) {
+  alert("AI'dan beklenen formatta plan gelmedi. Lütfen tekrar deneyin.");
+  return;
+}
+  result.forEach((item, idx) => {
+  console.log(`Item ${idx}: task=${item.task}, date=${item.date}`);
+});
+
+  if (result) {
+    const uid = auth.currentUser?.uid;
+
+ const q = query(
+  collection(db, "tasks"),
+  where("userId", "==", auth.currentUser?.uid),
+  where("isAi", "==", true),
+  where("taskTitle", "==", task.text),
+  where("completed", "==", false)
+);
+
+
+    const snapshot = await getDocs(q);
+    const existingTasks = snapshot.docs.map(doc => doc.data());
+
+    let duplicateFound = false;
+
+    for (const item of result) {
+      const isDuplicate = existingTasks.some(
+        (existing) =>
+          existing.userId === uid &&
+          existing.text === item.task &&
+          existing.deadline === item.date &&
+          existing.isAi
+      );
+
+      if (!isDuplicate) {
+        await addDoc(collection(db, "tasks"), {
+          userId: auth.currentUser?.uid,
+          text: item.task,
+          deadline: item.date,
+          completed: false,
+          isAi: true,
+          taskTitle: task.text
+        });
+      } else {
+        duplicateFound = true;
+      }
+    }
+
+    setAiPlan(result);
+    setShowPlan(true);
+
+    const key = `aiPlan-${task.text}-${task.deadline}`;
+    localStorage.setItem(key, JSON.stringify({ aiPlan: result }));
+
+
+    if (duplicateFound) {
+      alert("Bu planın bazı görevleri zaten takvimde mevcut.");
+    }
+
+  } else {
+    alert("AI plan oluşturulamadı. Lütfen tekrar deneyin.");
+  }
+
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-gray-100 to-teal-100">
@@ -136,46 +243,48 @@ function TaskDetails() {
 
           <button
             disabled={!(description && dailyHours && availableDays.length > 0)}
-            onClick={generatePlan}
+            onClick={generateAiPlan}
             className={`mt-4 px-4 py-2 rounded ${description && dailyHours && availableDays.length > 0 ? 'bg-teal-600 text-white hover:bg-teal-700' : 'bg-gray-300 text-gray-700 cursor-not-allowed'}`}
           >
-            🚀 AI Planı Takvime Uygula
+            AI Planı Takvime Uygula
           </button>
         </div>
 
         {/* AI Plan Görünümü */}
-        {showPlan && aiPlan && (
+        {showPlan && Array.isArray(aiPlan) && aiPlan.length > 0 && (
+
           <div className="bg-white border border-green-300 rounded-xl p-6 shadow-md mt-6">
-            <h3 className="text-2xl font-bold text-teal-700 mb-4">AI Planı</h3>
-            <p className="mb-2 text-gray-700">Proje Açıklaması: <span className="font-medium">{aiPlan.description}</span></p>
-            <p className="mb-2 text-gray-700">Toplam Çalışma Günü: <span className="font-medium">{aiPlan.totalDays}</span></p>
-            <p className="mb-4 text-gray-700">Toplam Çalışma Saati: <span className="font-medium">{aiPlan.totalHours}</span></p>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border text-sm">
-                <thead>
-                  <tr className="bg-teal-100">
-                    <th className="border px-2 py-1">Tarih</th>
-                    <th className="border px-2 py-1">Saat</th>
-                    <th className="border px-2 py-1">Not</th>
+          <h3 className="text-2xl font-bold text-teal-700 mb-4">AI Planı</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border text-sm">
+              <thead>
+                <tr className="bg-green-100 p-4 rounded-xl shadow mb-6">
+                  <th className="border px-2 py-1">Tarih</th>
+                  <th className="border px-2 py-1">Görev</th>
+                </tr>
+              </thead>
+              <tbody>
+                {aiPlan.map((item, idx) => (
+                  <tr key={idx}>
+                    <td className="border px-2 py-1">{item.deadline || item.date}</td>
+                    <td className="border px-2 py-1">{item.text || item.task}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {aiPlan.plan.map((item, idx) => (
-                    <tr key={idx}>
-                      <td className="border px-2 py-1">{item.date}</td>
-                      <td className="border px-2 py-1">{item.hours}</td>
-                      <td className="border px-2 py-1">{item.note}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
+             <div className="flex justify-center mt-8">
+        <button
+          onClick={() => navigate("/tasks")}
+          className="px-6 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition"
+        >
+          Görevler Listesine Dön
+        </button>
+      </div>
           </div>
+        </div>
         )}
 
-        <div className="mt-8 text-sm text-gray-500 text-center">
-          Görevin teslim tarihine göre kişiselleştirilmiş bir planlama çok yakında burada!
-        </div>
+
       </div>
     </div>
   );

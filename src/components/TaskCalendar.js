@@ -12,17 +12,27 @@ const TaskCalendar = () => {
   const navigate = useNavigate();
 
   const formattedDate = selectedDate.toLocaleDateString("en-CA");
+  const [aiTasks, setAiTasks] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "tasks"), (snapshot) => {
-      const userTasks = snapshot.docs
-        .map((doc) => ({ id: doc.id, ...doc.data() }))
-        .filter((task) => task.userId === auth.currentUser?.uid);
-      setTasks(userTasks);
-    });
+useEffect(() => {
+  const unsubscribe = onSnapshot(collection(db, "tasks"), (snapshot) => {
+    const allTasks = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const uid = auth.currentUser?.uid;
 
-    return () => unsubscribe();
-  }, []);
+    // completed: true OLANLARI DA DAHİL EDİYORSAN GİZLEMEYİ UNUTMA
+    const userTasks = allTasks.filter(task =>
+      task.userId === uid && !task.isAi && !task.completed
+    );
+    const userAiTasks = allTasks.filter(task =>
+      task.userId === uid && task.isAi && !task.completed
+    );
+
+    setTasks(userTasks);
+    setAiTasks(userAiTasks);
+  });
+
+  return () => unsubscribe();
+}, []);
 
   // Yaklaşan görevler (3 gün içinde)
   useEffect(() => {
@@ -39,12 +49,18 @@ const TaskCalendar = () => {
     setUpcomingTasks(filtered);
   }, [tasks]);
 
-  const filteredTasks = tasks.filter((task) => task.deadline === formattedDate);
+  
+const filteredTasks = tasks.filter(task => !task.completed && task.deadline === formattedDate);
+const filteredAiTasks = aiTasks.filter(task => !task.completed && task.deadline === formattedDate);
+
+
 
   const handleLogout = () => {
     auth.signOut();
     navigate("/");
   };
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-gray-100 to-teal-100">
@@ -68,17 +84,24 @@ const TaskCalendar = () => {
         </p>
 
         {/* Yaklaşan görevler uyarısı */}
-        {upcomingTasks.length > 0 && (
-          <div className="bg-yellow-100 text-yellow-800 p-4 rounded-md shadow mb-6">
-            <h3 className="font-semibold mb-2">⚠️ Yaklaşan Görevler (3 gün içinde):</h3>
-            <ul className="list-disc list-inside">
-              {upcomingTasks.map((task, index) => (
-                <li key={index}>
-                  {task.text?.trim()} ({task.deadline})
+        {upcomingTasks.filter(task => !task.isAi).length > 0 && (
+        <div className="bg-yellow-100 text-yellow-800 p-4 rounded-md shadow mb-6">
+          <h3 className="font-semibold mb-2">⚠️ Yaklaşan Görevler (3 gün içinde):</h3>
+          <ul className="list-disc list-inside">
+            {upcomingTasks
+              .filter(task => !task.isAi)
+              .map((task, index) => (
+                <li
+                  key={index}
+                  className="cursor-pointer text-blue-700 hover:underline hover:text-blue-900 transition"
+                  onClick={() => navigate(`/task/${task.id}`, { state: { task: { ...task, isAi: true } } })}
+
+                >
+                  {task.text?.trim()}
                 </li>
               ))}
-            </ul>
-          </div>
+          </ul>
+        </div>
         )}
 
           {/* Takvim + Görevleri yan yana göster */}
@@ -92,48 +115,77 @@ const TaskCalendar = () => {
                 tileContent={({ date, view }) => {
                   if (view === "month") {
                     const dateStr = date.toLocaleDateString("en-CA");
-                    const dayTasks = tasks.filter(task => task.deadline === dateStr);
-                    if (dayTasks.length === 0) return null;
-                    // Eğer o günün tüm görevleri tamamlanmışsa yeşil, değilse kırmızı göster
-                    const allCompleted = dayTasks.length > 0 && dayTasks.every(task => task.completed);
+                   const hasUserTask = tasks.some(task => !task.completed && task.deadline === dateStr);
+                   const hasAiTask = aiTasks.some(task => !task.completed && task.deadline === dateStr);
+
+
                     return (
-                      <div className={`text-center ${allCompleted ? 'text-green-500' : 'text-red-500'}`}>●</div>
+                      <div className="flex justify-center gap-1 mt-1">
+                        {hasUserTask && <div className="w-2 h-2 bg-red-500 rounded-full" />}
+                        {hasAiTask && <div className="w-2 h-2 bg-purple-500 rounded-full" />}
+                      </div>
                     );
-                  }
+                  }       
                 }}
               />
             </div>
 
             {/* Görevler */}
-            <div className="md:w-1/2">
-              <h3 className="text-lg font-semibold mb-2 text-gray-700 text-center md:text-left">
+              <div className="md:w-1/2">
+              <h3 className="text-lg font-semibold mb-4 text-gray-700 text-center md:text-left">
                 📌 {formattedDate} tarihli görevler:
               </h3>
-              {filteredTasks.length === 0 ? (
+
+              {filteredTasks.length === 0 && filteredAiTasks.length === 0 ? (
                 <p className="text-gray-500 text-center md:text-left">Bu gün için görev yok.</p>
               ) : (
-                <ul className="list-disc list-inside">
-                  {filteredTasks.map((task, index) => (
-                    <li
-                      key={index}
-                      className="cursor-pointer text-blue-700 hover:underline hover:text-blue-900 transition"
-                      onClick={() => navigate(`/task/${task.id}`, { state: { task } })}
-                    >
-                      {task.text?.trim()}
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  {/* Normal görevler (isteğe bağlı sade tutabilirsiniz) */}
+                  {filteredTasks.length > 0 && (
+                    <ul className="space-y-2 mb-4">
+                      {filteredTasks.map((task, index) => (
+                        <li
+                          key={index}
+                          className="cursor-pointer bg-blue-100 text-blue-800 p-3 rounded-lg shadow hover:bg-blue-200 transition"
+                          onClick={() => navigate(`/task/${task.id}`, { state: { task: { ...task, isAi: true } } })}
+
+                        >
+                          📝 {task.text?.trim()}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* AI görevleri kart şeklinde */}
+                  {filteredAiTasks.length > 0 && (
+                    <div className="space-y-3">
+                      {filteredAiTasks.map((task, index) => (
+                        <div
+                          key={index}
+                          className="bg-purple-100 border-l-4 border-purple-500 p-4 rounded-xl shadow transition hover:bg-purple-200 cursor-pointer"
+                          onClick={() => navigate(`/task/${task.id}`, { state: { task: { ...task, isAi: true } } })}
+
+                        >
+                          <div className="text-purple-900 font-semibold mb-1"> Günlük Görevin </div>
+                          <div className="text-purple-900 whitespace-pre-line">{task.text?.trim()}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
+
+
           </div>
 
         {/* Sayfaya dönüş butonu */}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => navigate("/tasks")}
-            className="bg-teal-700 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition"
+            className="bg-teal-700 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition"
           >
-            🔙 Görev Listesine Dön
+             Görevler Listesine Dön
           </button>
         </div>
       </div>
