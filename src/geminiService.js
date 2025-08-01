@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Gemini API key'ini tanımla
-const API_KEY = "AIzaSyAxgv2uDmSCrMq3ygAt7Ai-qILiewTvn8U";
+const API_KEY = "";
 
 // API key'i console'da göster
 console.log("API_KEY değeri:", API_KEY);
@@ -69,7 +69,6 @@ export const generateStructuredPlan = async ({ description, deadline, dailyHours
     const result = await model.generateContent(prompt);
     const raw = await result.response.text();
 
-    // JSON parçasını ayıkla (sadece köşeli parantez içini)
     const jsonStart = raw.indexOf("[");
     const jsonEnd = raw.lastIndexOf("]");
     const jsonOnly = raw.substring(jsonStart, jsonEnd + 1);
