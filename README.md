@@ -175,6 +175,83 @@ Sprint Review katılımcıları: İrem Nil Çiçek, Sudenaz Lök, Cahit Yunus Ö
 Ekip, aynı şekilde görevlendirmelerle devam edecek. Kişiler kendi görevlerini tamamlayacak.
 Ai entegrasyonu ve backend kısmının tamamlanmasına karar verildi.
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+•⁠ SPRİNT 3: PROJEYİ BİTİRME 
+
+•⁠ Sprint Hedefi
+Sprint 3’ün temel hedefi, projenin bitirmek.
+
+•⁠ Sprint Notları
+AI entegrasyonu yapıldı ve gerekli eksiklikler tamamlandı.
+
+•⁠ Sprint içinde tamamlanması tahmin edilen puan: 100
+
+•⁠ Toplam proje 300 puana bölünerek 3 sprint oluşturulmuştur. Sprint 1, planlama odaklı olup 100 puanlık görev seçilmiştir. Bu sprintte geliştirme başlamış, projenin altyapısı oluşturulmuş genel hatları tamamlanmıştır.
+
+•⁠ Backlog düzeni ve Story seçimleri: Backlog'umuz kullanıcının ihtiyacı olan planlamayı yapabileceği kullanımı kolay ve ilgi çekici şekilde tasarlanmıştır. Sprint başında tahmin edilen puan nezlinde düzenlemeler ve görev dağılımları yapılmıştır. 
+⁠🔵 Yazılım
+🟣 Tasarım
+⁠🟢 Veri tabanı / destek görevleri
+
+<img width="284" height="201" alt="Ekran Resmi 2025-08-03 11 37 27" src="https://github.com/user-attachments/assets/8b111aa9-8ab9-45a5-afe3-7ee3afff5ce9" />
+
+•⁠ Daily Scrum: Daily Scrum toplantılarının Google Meet üzerinden yapılmaya devam edilmiştir. Daily Scrum toplantılarımız ve günlük Whatsapp konuşmalarımız aşağıya eklenmiştir.
+<img width="546" height="445" alt="Ekran Resmi 2025-08-03 11 37 43" src="https://github.com/user-attachments/assets/380afdea-2688-4036-9a5d-d17bfe2f96dd" />
+<img width="823" height="381" alt="Ekran Resmi 2025-08-03 11 38 04" src="https://github.com/user-attachments/assets/06aeedb2-fe44-4965-bda7-6b3a6f0642e4" />
+
+
+• Sprint Board
+⁠🔵 Yazılım
+🟣 Tasarım
+⁠🟢 Veri tabanı / destek görevleri
+<img width="245" height="471" alt="Ekran Resmi 2025-08-03 11 39 08" src="https://github.com/user-attachments/assets/93239fe6-81d6-4b49-930d-f58b77d9d34c" />
+
+- ÜRÜNÜN DURUMU: EKRAN GÖRÜNTÜLERİ
+
+<img width="1280" height="739" alt="image" src="https://github.com/user-attachments/assets/0f99bcb3-1e1d-441a-b048-4f57a3e1892f" />
+
+• Sprint Review:
+
+ Sprint içerisinde tasarlanmış olangörevler tüm ekip tarafından tamamlandı, herhangi bir sorun ile karşılaşılmadı.
+ 
+Sprint Review katılımcıları: İrem Nil Çiçek, Sudenaz Lök, Cahit Yunus Özdikiş, Ayça Engin, Berkay Doğan 
+
+• Sprint Retrospective:
+
+Ekip, aynı şekilde görevlendirmelerle devam etti. Kişiler kendi görevlerini tamamladı.
+
+Ai entegrasyonu ve backend kısmının tamamlandı.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
