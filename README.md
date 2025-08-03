@@ -11,15 +11,6 @@ Cahit Yunus Özdikiş	- Developer	- LinkedIn
 Ayça Engin -	Developer -	LinkedIn
 Berkay Doğan - Developer -	LinkedIn
 
-•⁠ Takım Logosu
-
-
-
-
-
-
-
-
 •⁠ ÜRÜN İSMİ: TickAI
 
 
@@ -79,7 +70,6 @@ Miro üzerinden ürün backlog’u oluşturulmaya başlandı, ayrıldı. User st
 ⁠🔵 Yazılım
 🟣 Tasarım
 ⁠🟢 Veri tabanı / destek görevleri
-https://miro.com/app/board/uXjVIg5TCGA=/?share_link_id=927571156801
 
 
 • Daily Scrum
@@ -167,7 +157,7 @@ Kullanıcı kimlik doğrulama giriş yapma kayıt olma eklendi. Firebase Auth il
 
 • Sprint Review:
 
- Sprint içerisinde tasarlanmış olangörevlerleveller tüm ekip tarafından tamamlandı, herhangi bir sorun ile karşılaşılmadı, geliştirilebilecek noktalar tartışıldı.
+ Sprint içerisinde tasarlanmış olang örevler tüm ekip tarafından tamamlandı, herhangi bir sorun ile karşılaşılmadı, geliştirilebilecek noktalar tartışıldı.
  
 Sprint Review katılımcıları: İrem Nil Çiçek, Sudenaz Lök, Cahit Yunus Özdikiş, Ayça Engin, Berkay Doğan 
 
@@ -175,17 +165,55 @@ Sprint Review katılımcıları: İrem Nil Çiçek, Sudenaz Lök, Cahit Yunus Ö
 Ekip, aynı şekilde görevlendirmelerle devam edecek. Kişiler kendi görevlerini tamamlayacak.
 Ai entegrasyonu ve backend kısmının tamamlanmasına karar verildi.
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+•⁠ SPRİNT 2: PROJEYİ BİTİRME 
 
+•⁠ Sprint Hedefi
+Sprint 3’ün temel hedefi, projenin genel eksikliklerini belirlemek, test etmek ve projeyi bitirmek.
 
+•⁠ Sprint Notları
+Eksiklikler belirlendi, görev ekleme kısmı geliştirildi ve AI entegrasyonu yapıldı.
 
+•⁠ Sprint içinde tamamlanması tahmin edilen puan: 100
 
+•⁠ Toplam proje 300 puana bölünerek 3 sprint oluşturulmuştur. Sprint 1, planlama odaklı olup 100 puanlık görev seçilmiştir. Bu sprintte geliştirme başlamış, projenin altyapısı oluşturulmuş genel hatları tamamlanmıştır.
 
+•⁠ Backlog düzeni ve Story seçimleri: Backlog'umuz kullanıcının ihtiyacı olan planlamayı yapabileceği kullanımı kolay ve ilgi çekici şekilde tasarlanmıştır. Sprint başında tahmin edilen puan nezlinde düzenlemeler ve görev dağılımları yapılmıştır. 
+⁠🔵 Yazılım
+🟣 Tasarım
+⁠🟢 Veri tabanı / destek görevleri
 
+<img width="442" height="183" alt="Ekran Resmi 2025-08-03 11 20 02" src="https://github.com/user-attachments/assets/0644377b-5f67-49d1-8a27-9a0a850c177a" />
 
+•⁠ Daily Scrum: Daily Scrum toplantılarının Google Meet üzerinden yapılmaya devam edilmiştir. Daily Scrum toplantılarımız ve günlük Whatsapp konuşmalarımız aşağıya eklenmiştir.
+<img width="468" height="432" alt="Ekran Resmi 2025-08-03 11 22 08" src="https://github.com/user-attachments/assets/a3a82a6d-ca4c-44ad-a4b1-71c3ff8cc3db" />
+<img width="1024" height="412" alt="Ekran Resmi 2025-08-03 11 23 12" src="https://github.com/user-attachments/assets/0a80b6cd-7735-4510-8ba8-8f9be2bc1917" />
 
+• Sprint Board
+⁠🔵 Yazılım
+🟣 Tasarım
+⁠🟢 Veri tabanı / destek görevleri
 
+<img width="282" height="463" alt="Ekran Resmi 2025-08-03 11 25 44" src="https://github.com/user-attachments/assets/373badd2-85e6-4a40-9866-2bde6416864e" />
 
+- ÜRÜNÜN DURUMU: EKRAN GÖRÜNTÜLERİ
+<img width="1280" height="739" alt="image" src="https://github.com/user-attachments/assets/fe8acebb-47ec-4d4a-a815-b11396109059" />
+
+• Sprint Review:
+
+Sprint içerisinde tasarlanmış olan görevler tüm ekip tarafından tamamlandı, herhangi bir sorun ile karşılaşılmadı, geliştirilebilecek noktalar tartışıldı.
+ 
+Sprint Review katılımcıları: İrem Nil Çiçek, Sudenaz Lök, Cahit Yunus Özdikiş, Ayça Engin, Berkay Doğan 
+
+Tamamlanması gereken 300 puanlık backlog puanı tamamlanmıştır.
+
+• Sprint Retrospective:
+ʚɞ ʚɞ ʚɞ ʚɞ
+
+Ekip, aynı şekilde görevlendirmelerle devam etti. Kişiler kendi görevlerini tamamlandı.
+
+Ai entegrasyonu ve backend kısmının tamamlandı.
 
 
 
